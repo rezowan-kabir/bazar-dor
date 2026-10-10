@@ -24,7 +24,7 @@ const Hero = () => {
         </p>
 
         <Link
-          href="#সব-পণ্য"
+          href="#products"
           className="mt-7 inline-flex items-center justify-center rounded-xl border-none bg-[#078b43] px-4 py-2 text-sm font-bold text-white shadow-md transition-colors hover:bg-[#067536] sm:px-6 sm:py-3 sm:text-base"
         >
           সব পণ্য দেখুন
