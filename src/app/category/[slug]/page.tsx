@@ -1,13 +1,23 @@
 import ProductCard from "@/app/components/ProductCard";
 import React from "react";
-export const dynamic = "force-dynamic";
-
 
 interface Product {
   id: number;
+  slug: string;
+  nameBn: string;
+  category: string;
   categoryNameBn: string;
   categoryIcon: string;
-  
+  unit: string;
+  image: string;
+  today: number;
+  yesterday: number;
+  lastWeek: number;
+  lastMonth: number;
+  change: {
+    dir: "up" | "down" | "flat";
+    pct: number;
+  };
 }
 
 interface CategoryPageProps {
@@ -28,9 +38,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const categoryIcon = products[0]?.categoryIcon || "🛒";
 
   return (
-    <main className="container mx-auto min-h-screen bg-gray-50 pb-16">
+    <main className="min-h-screen bg-gray-50 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* top banner */}
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm flex items-center space-x-4">
           <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
             {categoryIcon}
