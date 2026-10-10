@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import NavLinks from "./components/NavLinks";
 import Marquee from "./components/Marquee";
+import { Toaster } from "react-hot-toast";
 
 
 const notoSerifBengali = Noto_Serif_Bengali({
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Marquee />
         </Suspense>
         <main className="min-h-screen bg-[#f0f5f1]">{children}</main>
+        <Toaster position="top-right" reverseOrder={false} />
         <Footer />
       </body>
     </html>
