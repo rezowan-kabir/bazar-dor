@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import NavLinks from './NavLinks';
 
 const Header = () => {
     const date = new Date().toLocaleDateString("bn-BD", {
@@ -8,7 +7,7 @@ const Header = () => {
     });
     return (
       <div>
-        <div className="w-full bg-white border-b border-gray-100">
+        <div className="w-full bg-white ">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16 sm:h-20">
               <div className="flex items-center gap-2 sm:gap-4">
@@ -49,7 +48,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <NavLinks />
+        
       </div>
     );
 };
