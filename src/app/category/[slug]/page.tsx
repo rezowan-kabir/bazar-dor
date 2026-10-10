@@ -1,6 +1,6 @@
 import ProductCard from "@/app/components/ProductCard";
 import React from "react";
-
+export const dynamic = "force-dynamic";
 
 
 interface Product {
@@ -46,7 +46,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </div>
 
         <div className="flex items-center justify-between text-sm text-gray-600 px-1">
-          <p>মোট {products.length}টি পণ্য দেখানো হচ্ছে[cite: 7]</p>
+          <p>মোট {products.length}টি পণ্য দেখানো হচ্ছে</p>
         </div>
 
         {products.length > 0 ? (
