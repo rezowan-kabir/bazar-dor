@@ -5,7 +5,7 @@ export default function ProductCard({ product }) {
   const isDown = product.change?.dir === "down";
 
   return (
-    <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+    <div className="container mx-auto flex items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-colors hover:text-green-600">
       <div className="flex items-center space-x-3">
         {/* Product Icon / Image */}
         <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-2xl">
