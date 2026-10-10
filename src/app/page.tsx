@@ -1,13 +1,10 @@
 import Image from "next/image";
+import Hero from "./components/Hero";
 
 export default function Home() {
   return (
     <div>
-      esrdfghjmktdrtcfy <br />
-      vubinjokmxrdtcfy <br />
-      vgubhn eryrct <br />
-      vyne rcvb xcty <br />
-      vbrcyvg hb <br />
+      <Hero/>
     </div>
   );
 }
