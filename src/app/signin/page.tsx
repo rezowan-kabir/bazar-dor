@@ -1,9 +1,48 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignInPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+      });
+
+      if (error) {
+        toast.error(error.message || "সাইন ইন করতে সমস্যা হয়েছে!");
+        setLoading(false);
+        return;
+      }
+
+      if (data) {
+        toast.success("সফলভাবে সাইন ইন করা হয়েছে! 🎉");
+        router.push("/");
+        router.refresh();
+      }
+    } catch (err) {
+      toast.error("কোথাও কোনো ত্রুটি ঘটেছে!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="container mx-auto min-h-screen bg-[#f4f7f4] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-8">
@@ -16,38 +55,43 @@ export default function SignInPage() {
       </div>
 
       <div className="bg-white py-8 px-6 sm:px-10 shadow-sm border border-gray-100 rounded-3xl w-full max-w-md space-y-6">
-        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+        <form className="space-y-4" onSubmit={handleSubmit}>
           {/* email */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               ইমেইল
             </label>
             <input
-             
+              type="email"
+              name="email"
+              required
               placeholder="you@example.com"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400     text-sm "
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
             />
           </div>
 
-          {/* password*/}
+          {/* password */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               পাসওয়ার্ড
             </label>
             <input
-              
+              type="password"
+              name="password"
+              required
               placeholder="কমপক্ষে ৮ অক্ষর"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400   text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
             />
           </div>
 
           {/* signin btn */}
           <div className="pt-2">
             <button
-              
-              className="w-full bg-[#00873e] hover:bg-[#007032] text-white font-semibold py-3.5 px-4 rounded-xl transition-colors shadow-sm text-base"
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#00873e] hover:bg-[#007032] text-white font-semibold py-3.5 px-4 rounded-xl transition-colors shadow-sm text-base disabled:opacity-50"
             >
-              সাইন ইন
+              {loading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
             </button>
           </div>
         </form>
@@ -61,24 +105,26 @@ export default function SignInPage() {
         {/* social login */}
         <div className="grid grid-cols-2 gap-3">
           <button
-            
-            className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700 "
+            type="button"
+            onClick={() => toast.error("গুগল সাইন-ইন কনফিগার করা হয়নি")}
+            className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700"
           >
             <span className="text-base">G</span>
-            <span>Google দিয়ে চালিয়ে যান</span>
+            <span>Google দিয়ে চালিয়ে যান</span>
           </button>
 
           <button
-            
-            className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700 "
+            type="button"
+            onClick={() => toast.error("গিটহাব সাইন-ইন কনফিগার করা হয়নি")}
+            className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700"
           >
             <span className="text-base">🐙</span>
-            <span>GitHub দিয়ে চালিয়ে যান</span>
+            <span>GitHub দিয়ে চালিয়ে যান</span>
           </button>
         </div>
 
         <div className="text-center text-xs text-gray-500 pt-1">
-          অ্যাকাউন্ট নেই?{"    "}
+          অ্যাকাউন্ট নেই?{" "}
           <Link
             href="/signup"
             className="text-green-600 font-semibold hover:underline"

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from "react";
 import CurrentDate from "./CurrentDate";
+import UserInfo from './UserInfo';
 
 const Header = () => {
     return (
@@ -33,21 +34,7 @@ const Header = () => {
                 </div>
               </Link>
 
-              <div className="flex items-center gap-2 sm:gap-6">
-                <Link
-                  href="/signin"
-                  className="text-gray-700 hover:text-green-600 font-medium text-xs sm:text-base transition-colors whitespace-nowrap"
-                >
-                  সাইন ইন
-                </Link>
-
-                <Link
-                  href="/signup"
-                  className="bg-green-600 hover:bg-green-700 text-white font-medium px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-base transition-colors whitespace-nowrap shadow-sm"
-                >
-                  সাইন আপ
-                </Link>
-              </div>
+              <UserInfo />
             </div>
           </div>
         </div>
