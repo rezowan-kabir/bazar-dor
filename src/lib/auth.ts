@@ -2,16 +2,28 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 
-const client = new MongoClient(process.env.MONGODB_URL as string);
-const db = client.db("Bazar-Dor");
+function createAuth() {
+  const connectionString = process.env.MONGODB_URL;
+  if (!connectionString?.trim()) {
+    throw new Error("MONGODB_URL must be set to use authentication.");
+  }
 
-export const auth = betterAuth({
+  const client = new MongoClient(connectionString);
+  const db = client.db("Bazar-Dor");
 
-    emailAndPassword: { 
-    enabled: true, 
-  }, 
-  database: mongodbAdapter(db, {
-    
-    client,
-  }),
-});
+  return betterAuth({
+    emailAndPassword: {
+      enabled: true,
+    },
+    database: mongodbAdapter(db, {
+      client,
+    }),
+  });
+}
+
+let authInstance: ReturnType<typeof createAuth> | undefined;
+
+export function getAuth() {
+  authInstance ??= createAuth();
+  return authInstance;
+}

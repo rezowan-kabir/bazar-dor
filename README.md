@@ -34,3 +34,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+Before deploying, add these environment variables in the Vercel project settings:
+
+- `MONGODB_URL` — MongoDB connection string used by authentication.
+- `BETTER_AUTH_SECRET` — secret used by Better Auth.
+- `BETTER_AUTH_URL` — base URL of the deployed application.
+
+Set them for each Vercel environment where the app will run. Authentication initializes when its API route receives a request, so a missing `MONGODB_URL` no longer breaks the build; authentication requests will report a configuration error until it is set.
