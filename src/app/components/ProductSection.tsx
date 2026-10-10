@@ -1,13 +1,7 @@
 import React from "react";
 import ProductCard from "./ProductCard";
 
-// TypeScript Interfaces for Product Data Structure
-export interface Market {
-  market: string;
-  division: string;
-  min: number;
-  max: number;
-}
+
 
 export interface Product {
   id: number;
@@ -19,14 +13,11 @@ export interface Product {
   unit: string;
   image: string;
   today: number;
-  yesterday: number;
-  lastWeek: number;
-  lastMonth: number;
   change: {
     dir: "up" | "down" | "flat";
     pct: number;
   };
-  markets?: Market[];
+  markets?: string[];
 }
 
 export default async function ProductSection() {

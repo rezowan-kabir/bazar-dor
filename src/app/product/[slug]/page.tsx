@@ -21,8 +21,6 @@ interface Product {
   image: string;
   today: number;
   yesterday: number;
-  lastWeek: number;
-  lastMonth: number;
   change: {
     dir: "up" | "down" | "flat";
     pct: number;
@@ -39,7 +37,6 @@ interface ProductPageProps {
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params;
 
-  // প্রোডাক্টস লিস্ট ফেচ করে নির্দিষ্ট slug মেলানো
   const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products");
   const products: Product[] = await res.json();
   const product = products.find((p) => p.slug === slug);
@@ -52,7 +49,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     );
   }
 
-  // বাজারের সর্বনিম্ন, সর্বোচ্চ এবং গড় হিসাব করা
   const markets = product.markets || [];
   const minPrice =
     markets.length > 0 ? Math.min(...markets.map((m) => m.min)) : product.today;
@@ -76,7 +72,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   return (
     <main className="min-h-screen bg-[#f7f8f6] py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-6">
-        {/* Breadcrumb Navigation */}
         <nav className="text-xs sm:text-sm text-gray-500 flex items-center gap-2">
           <Link href="/" className="hover:text-gray-800">
             হোম
@@ -92,7 +87,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           <span className="text-gray-900 font-medium">{product.nameBn}</span>
         </nav>
 
-        {/* Product Hero Banner */}
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl flex items-center justify-center text-4xl shadow-inner">
@@ -139,7 +133,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        {/* Price Summary Cards */}
+        {/* Price summary cards */}
         <div>
           <h2 className="text-lg font-bold text-gray-900 mb-3">
             দামের সারসংক্ষেপ
@@ -175,7 +169,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        {/* Market Price Table */}
+        {/* market price table */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-lg font-bold text-gray-900 mb-4">
             বাজারভিত্তিক আজকের দাম
