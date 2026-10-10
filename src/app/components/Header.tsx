@@ -1,10 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from "react";
+import CurrentDate from "./CurrentDate";
 
 const Header = () => {
-    const date = new Date().toLocaleDateString("bn-BD", {
-      dateStyle: "full",
-    });
     return (
       <div>
         <div className="w-full bg-white ">
@@ -25,7 +24,9 @@ const Header = () => {
                     বাজার দর
                   </h1>
                   <p className="text-[10px] sm:text-sm text-gray-500 whitespace-nowrap">
-                    {date}
+                    <Suspense fallback={null}>
+                      <CurrentDate />
+                    </Suspense>
                   </p>
                 </div>
               </div>

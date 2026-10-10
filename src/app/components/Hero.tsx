@@ -1,17 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Suspense } from "react";
+import CurrentDate from "./CurrentDate";
 
 const Hero = () => {
-  const date = new Date().toLocaleDateString("bn-BD", {
-    dateStyle: "full",
-  });
-
   return (
     <div className=" container mx-auto grid  grid-cols-1 items-center gap-8 rounded-[32px] border border-[#dce7df] bg-[#fbfdfb] px-6 py-10 sm:px-10 md:grid-cols-2 md:px-12 md:py-16 lg:gap-16">
       <div>
         <span className="inline-block rounded-full bg-[#e2f2e8] px-5 py-2 text-lg font-medium text-[#07853e]">
-          {date}
+          <Suspense fallback={null}>
+            <CurrentDate />
+          </Suspense>
         </span>
 
         <h1 className="mt-5 text-3xl font-extrabold leading-tight text-[#1d2920] sm:text-4xl lg:text-5xl">

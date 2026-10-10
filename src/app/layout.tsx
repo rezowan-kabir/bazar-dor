@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {Noto_Serif_Bengali } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -25,8 +26,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Header />
-        <NavLinks />
-        <Marquee />
+        <Suspense fallback={<div aria-hidden="true" className="h-8" />}>
+          <NavLinks />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div
+              aria-hidden="true"
+              className="h-8 border-y border-gray-200 bg-white"
+            />
+          }
+        >
+          <Marquee />
+        </Suspense>
         <main className="min-h-screen bg-[#f0f5f1]">{children}</main>
         <Footer />
       </body>
