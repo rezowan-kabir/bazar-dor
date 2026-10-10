@@ -75,3 +75,5 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     </main>
   );
 }
+
+export const instant = false;
