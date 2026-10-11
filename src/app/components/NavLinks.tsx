@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface Category {
   id: string;
@@ -12,7 +13,9 @@ const NavLinks = async () => {
     "https://openapi.programming-hero.com/api/bazardor/categories",
   );
   const categories: Category[] = await res.json();
-
+if (!categories) {
+  notFound();
+}
   return (
     <div className="container mx-auto   ">
       <div className=" px-4 sm:px-6 lg:px-8">

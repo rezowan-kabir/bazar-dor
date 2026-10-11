@@ -1,5 +1,6 @@
 import React from "react";
 import ProductCard from "./ProductCard";
+import { notFound } from "next/navigation";
 
 
 
@@ -23,7 +24,9 @@ export interface Product {
 export default async function ProductSection() {
   const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products");
   const products: Product[] = await res.json();
-
+if (!products) {
+  notFound();
+}
   const increasedProducts = products.filter((p) => p.change?.dir === "up");
   const decreasedProducts = products.filter((p) => p.change?.dir === "down");
 

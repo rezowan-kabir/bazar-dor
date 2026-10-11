@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,7 +63,9 @@ export default function ProfilePage() {
       </div>
     );
   }
-
+if (!user) {
+  notFound();
+}
   if (!user) return null;
 
   return (

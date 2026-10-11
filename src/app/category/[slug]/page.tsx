@@ -1,4 +1,5 @@
 import ProductCard from "@/app/components/ProductCard";
+import { notFound } from "next/navigation";
 import React from "react";
 
 interface Product {
@@ -33,7 +34,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     `https://openapi.programming-hero.com/api/bazardor/products?category=${slug}`,
   );
   const products: Product[] = await res.json();
-
+if (!products) {
+  notFound();
+}
   const categoryName = products[0]?.categoryNameBn || slug;
   const categoryIcon = products[0]?.categoryIcon || "🛒";
 
