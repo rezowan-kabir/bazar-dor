@@ -7,4 +7,5 @@ async function handleAuth(request: Request) {
   return toNextJsHandler(getAuth()).GET(request);
 }
 
+// 
 export { handleAuth as GET, handleAuth as POST };
