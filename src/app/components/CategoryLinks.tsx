@@ -29,10 +29,10 @@ export default function CategoryLinks({
                 key={category.id}
                 href={`/category/${category.slug}`}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex shrink-0 items-center space-x-2 whitespace-nowrap text-sm font-medium transition-colors duration-200 sm:text-base ${
+                className={`flex shrink-0 items-center space-x-2  text-sm font-medium transition-colors duration-200 sm:text-base ${
                   isActive
-                    ? "text-green-700 underline decoration-2 underline-offset-8"
-                    : "text-gray-800 hover:text-green-700"
+                    ? "text-green-700  "
+                    : "text-gray-800"
                 }`}
               >
                 <span className="text-lg">{category.icon}</span>
