@@ -18,29 +18,37 @@ export default function SignInPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    try {
-      const { data, error } = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: "/",
-      });
+    const { data, error } = await authClient.signIn.email({
+      email,
+      password,
+      callbackURL: "/",
+    });
 
-      if (error) {
-        toast.error(error.message || "সাইন ইন করতে সমস্যা হয়েছে!");
-        setLoading(false);
-        return;
-      }
-
-      if (data) {
-        toast.success("সফলভাবে সাইন ইন করা হয়েছে! 🎉");
-        router.push("/");
-        router.refresh();
-      }
-    } catch (err) {
-      toast.error("কোথাও কোনো ত্রুটি ঘটেছে!");
-    } finally {
+    if (error) {
+      toast.error(error.message || "সাইন ইন করতে সমস্যা হয়েছে!");
       setLoading(false);
+      return;
     }
+
+    if (data) {
+      toast.success("সফলভাবে সাইন ইন করা হয়েছে! 🎉");
+      router.push("/");
+      router.refresh();
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+  };
+
+  const handleGithubSignIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "github",
+      callbackURL: "/",
+    });
   };
 
   return (
@@ -106,7 +114,7 @@ export default function SignInPage() {
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={() => toast.error("গুগল সাইন-ইন কনফিগার করা হয়নি")}
+            onClick={handleGoogleSignIn}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700"
           >
             <span className="text-base">G</span>
@@ -115,7 +123,7 @@ export default function SignInPage() {
 
           <button
             type="button"
-            onClick={() => toast.error("গিটহাব সাইন-ইন কনফিগার করা হয়নি")}
+            onClick={handleGithubSignIn}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700"
           >
             <span className="text-base">🐙</span>

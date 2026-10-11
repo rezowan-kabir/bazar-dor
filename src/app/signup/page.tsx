@@ -20,7 +20,6 @@ export default function SignUpPage() {
     const password = formData.get("password") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
 
-    // পাসওয়ার্ড ম্যাচিং চেক
     if (password !== confirmPassword) {
       toast.error("পাসওয়ার্ড মিলছে না!");
       setLoading(false);
@@ -52,6 +51,19 @@ export default function SignUpPage() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+  };
+
+  const handleGithubSignIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "github",
+      callbackURL: "/",
+    });
+  };
   return (
     <main className="min-h-screen bg-[#f4f7f4] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-8">
@@ -141,7 +153,7 @@ export default function SignUpPage() {
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={() => toast.error("গুগল সাইন-ইন কনফিগার করা হয়নি")}
+            onClick={handleGoogleSignIn}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-colors"
           >
             <span className="text-base">G</span>
@@ -150,7 +162,7 @@ export default function SignUpPage() {
 
           <button
             type="button"
-            onClick={() => toast.error("গিটহাব সাইন-ইন কনফিগার করা হয়নি")}
+            onClick={handleGithubSignIn}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-colors"
           >
             <span className="text-base">🐙</span>
