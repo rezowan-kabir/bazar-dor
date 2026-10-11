@@ -42,27 +42,32 @@ export default function SignUpPage() {
 
       if (data) {
         toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! 🎉");
-        router.push("/");
+        router.push("/signin");
       }
-    } catch (err) {
-      toast.error("কোথাও কোনো ত্রুটি ঘটেছে!");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "সাইন আপ করা যায়নি।",
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    const { data, error } = await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/",
-    });
-  };
+  const handleSocialSignIn = async (provider: "google" | "github") => {
+    try {
+      const { error } = await authClient.signIn.social({
+        provider,
+        callbackURL: "/?auth=success",
+      });
 
-  const handleGithubSignIn = async () => {
-    const { data, error } = await authClient.signIn.social({
-      provider: "github",
-      callbackURL: "/",
-    });
+      if (error) {
+        toast.error(error.message || "সোশ্যাল সাইন ইন করা যায়নি।");
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "সোশ্যাল সাইন ইন করা যায়নি।",
+      );
+    }
   };
   return (
     <main className="min-h-screen bg-[#f4f7f4] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -153,7 +158,7 @@ export default function SignUpPage() {
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={handleGoogleSignIn}
+            onClick={() => handleSocialSignIn("google")}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-colors"
           >
             <span className="text-base">G</span>
@@ -162,7 +167,7 @@ export default function SignUpPage() {
 
           <button
             type="button"
-            onClick={handleGithubSignIn}
+            onClick={() => handleSocialSignIn("github")}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-colors"
           >
             <span className="text-base">🐙</span>

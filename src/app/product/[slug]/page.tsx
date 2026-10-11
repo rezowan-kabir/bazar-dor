@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import React from "react";
 
 export const instant = false;
@@ -37,16 +38,24 @@ interface ProductPageProps {
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params;
 
-  const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products");
+  const res = await fetch(
+    "https://openapi.programming-hero.com/api/bazardor/products",
+  );
+
+  if (!res.ok) {
+    throw new Error("পণ্যের তথ্য লোড করা যায়নি।");
+  }
+
   const products: Product[] = await res.json();
+
+  if (!Array.isArray(products)) {
+    throw new Error("পণ্যের তালিকাটি সঠিক নয়।");
+  }
+
   const product = products.find((p) => p.slug === slug);
 
   if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500 text-lg">পণ্যটি পাওয়া যায়নি।</p>
-      </div>
-    );
+    notFound();
   }
 
   const markets = product.markets || [];
@@ -65,6 +74,14 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const isUp = product.change?.dir === "up";
   const isDown = product.change?.dir === "down";
   const priceDiff = Math.abs(product.today - product.yesterday);
+  const unitLabels: Record<string, string> = {
+    kg: "কেজি",
+    liter: "লিটার",
+    litre: "লিটার",
+    dozen: "ডজন",
+    piece: "পিস",
+  };
+  const unitLabel = unitLabels[product.unit] || product.unit;
 
   const toBanglaNumber = (value: number | string) =>
     String(value).replace(/\d/g, (digit) => "০১২৩৪৫৬৭৮৯"[Number(digit)]);
@@ -97,8 +114,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 {product.nameBn}
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                প্রতি {product.unit === "kg" ? "কেজি" : product.unit} -{" "}
-                {product.categoryNameBn}
+                প্রতি {unitLabel} - {product.categoryNameBn}
               </p>
               <p className="text-xs sm:text-sm text-gray-500 mt-1">
                 গতকালকের তুলনায় আজ দাম{" "}
@@ -116,19 +132,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               {toBanglaNumber(product.today)}
             </p>
             <p className="text-xs text-gray-500">
-              টাকা / {product.unit === "kg" ? "কেজি" : product.unit}
+              টাকা / {unitLabel}
             </p>
             <div
               className={`text-xs font-bold mt-1 flex items-center justify-end gap-1 ${
                 isUp
-                  ? "text-red-600"
+                  ? "text-green-600"
                   : isDown
-                    ? "text-green-600"
+                    ? "text-red-600"
                     : "text-gray-500"
               }`}
             >
               <span>{isUp ? "▲" : isDown ? "▼" : "•"}</span>
-              <span>{toBanglaNumber(product.change?.pct ?? 0)}%</span>
+              <span>
+                {toBanglaNumber(Math.abs(product.change?.pct ?? 0))}%
+              </span>
             </div>
           </div>
         </div>

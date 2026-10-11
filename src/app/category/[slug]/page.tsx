@@ -1,5 +1,5 @@
-import ProductCard from "@/app/components/ProductCard";
 import { notFound } from "next/navigation";
+import CategoryProductList from "@/app/components/CategoryProductList";
 import React from "react";
 
 interface Product {
@@ -33,10 +33,21 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const res = await fetch(
     `https://openapi.programming-hero.com/api/bazardor/products?category=${slug}`,
   );
+
+  if (!res.ok) {
+    throw new Error("এই ক্যাটাগরির পণ্য লোড করা যায়নি।");
+  }
+
   const products: Product[] = await res.json();
-if (!products) {
-  notFound();
-}
+
+  if (!Array.isArray(products)) {
+    throw new Error("পণ্যের তালিকাটি সঠিক নয়।");
+  }
+
+  if (products.length === 0) {
+    notFound();
+  }
+
   const categoryName = products[0]?.categoryNameBn || slug;
   const categoryIcon = products[0]?.categoryIcon || "🛒";
 
@@ -57,23 +68,7 @@ if (!products) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-sm text-gray-600 px-1">
-          <p>মোট {products.length}টি পণ্য দেখানো হচ্ছে</p>
-        </div>
-
-        {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20 bg-white rounded-2xl border border-gray-200">
-            <p className="text-gray-500 text-lg">
-              এই ক্যাটাগরিতে কোনো পণ্য পাওয়া যায়নি।
-            </p>
-          </div>
-        )}
+        <CategoryProductList products={products} />
       </div>
     </main>
   );

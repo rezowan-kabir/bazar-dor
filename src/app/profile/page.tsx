@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,37 +12,11 @@ export default function ProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     if (!isPending && !user) {
       router.push("/signin");
     }
   }, [user, isPending, router]);
-
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const name = String(formData.get("name") ?? "");
-    setLoading(true);
-
-    try {
-      const { data, error } = await authClient.updateUser({
-        name: name,
-      });
-
-      if (error) {
-        toast.error(error.message || "নাম আপডেট করতে সমস্যা হয়েছে!");
-      } else {
-        toast.success("প্রোফাইল সফলভাবে আপডেট করা হয়েছে! 🎉");
-        router.refresh();
-      }
-    } catch (err) {
-      toast.error("কোথাও কোনো ত্রুটি ঘটেছে!");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -63,9 +37,6 @@ export default function ProfilePage() {
       </div>
     );
   }
-if (!user) {
-  notFound();
-}
   if (!user) return null;
 
   return (
@@ -111,36 +82,13 @@ if (!user) {
           </button>
         </div>
 
-        {/* update section */}
-        <div className="bg-white py-8 px-6 sm:px-8 shadow-sm border border-gray-100 rounded-3xl space-y-6">
-          <h3 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
-            তথ্য
-          </h3>
-
-          <form onSubmit={handleUpdateProfile} className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                নাম
-              </label>
-              <input
-                type="text"
-                name="name"
-                defaultValue={user.name || ""}
-                required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-              />
-            </div>
-
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#00873e] hover:bg-[#007032] text-white font-semibold py-3.5 px-4 rounded-xl transition-colors shadow-sm text-base disabled:opacity-50"
-              >
-                {loading ? "আপডেট হচ্ছে..." : "আপডেট"}
-              </button>
-            </div>
-          </form>
+        <div className="text-right">
+          <Link
+            href="/profile/update"
+            className="inline-flex rounded-xl bg-[#00873e] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#007032]"
+          >
+            তথ্য আপডেট করুন
+          </Link>
         </div>
 
         <div className="text-center pt-4">

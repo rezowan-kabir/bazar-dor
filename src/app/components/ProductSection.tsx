@@ -1,6 +1,5 @@
 import React from "react";
 import ProductCard from "./ProductCard";
-import { notFound } from "next/navigation";
 
 
 
@@ -22,13 +21,34 @@ export interface Product {
 }
 
 export default async function ProductSection() {
-  const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products");
+  const res = await fetch(
+    "https://openapi.programming-hero.com/api/bazardor/products",
+  );
+
+  if (!res.ok) {
+    throw new Error("পণ্যের তালিকা লোড করা যায়নি।");
+  }
+
   const products: Product[] = await res.json();
-if (!products) {
-  notFound();
-}
-  const increasedProducts = products.filter((p) => p.change?.dir === "up");
-  const decreasedProducts = products.filter((p) => p.change?.dir === "down");
+
+  if (!Array.isArray(products)) {
+    throw new Error("পণ্যের তালিকাটি সঠিক নয়।");
+  }
+
+  const increasedProducts = products
+    .filter((product) => product.change?.dir === "up")
+    .sort(
+      (first, second) =>
+        Math.abs(second.change.pct) - Math.abs(first.change.pct),
+    )
+    .slice(0, 6);
+  const decreasedProducts = products
+    .filter((product) => product.change?.dir === "down")
+    .sort(
+      (first, second) =>
+        Math.abs(second.change.pct) - Math.abs(first.change.pct),
+    )
+    .slice(0, 6);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
@@ -38,7 +58,7 @@ if (!products) {
           <span>▲</span> আজ দাম বেড়েছে
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {increasedProducts.slice(0, 6).map((product) => (
+          {increasedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -50,7 +70,7 @@ if (!products) {
           <span>▼</span> আজ দাম কমেছে
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {decreasedProducts.slice(0, 6).map((product) => (
+          {decreasedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

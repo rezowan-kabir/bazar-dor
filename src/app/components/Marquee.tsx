@@ -39,6 +39,7 @@ const Marquee = async () => {
   const unitLabels: Record<string, string> = {
     kg: "কেজি",
     liter: "লিটার",
+    litre: "লিটার",
     dozen: "ডজন",
     piece: "পিস",
   };
@@ -56,9 +57,9 @@ const Marquee = async () => {
             const arrow = isUp ? "▲" : isDown ? "▼" : "—";
 
             const color = isUp
-              ? "text-red-500"
+              ? "text-green-600"
               : isDown
-                ? "text-green-600"
+                ? "text-red-500"
                 : "text-gray-500";
 
             return (
@@ -77,7 +78,7 @@ const Marquee = async () => {
 
                 <span className={`font-semibold ${color}`}>
                   {arrow}{" "}
-                  {product.change.pct.toLocaleString("bn-BD", {
+                  {Math.abs(product.change.pct).toLocaleString("bn-BD", {
                     maximumFractionDigits: 1,
                   })}
                   %

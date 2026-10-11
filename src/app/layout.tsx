@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import NavLinks from "./components/NavLinks";
 import Marquee from "./components/Marquee";
 import { Toaster } from "react-hot-toast";
+import AuthNotice from "./components/AuthNotice";
 
 
 const notoSerifBengali = Noto_Serif_Bengali({
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </Suspense>
         <main className="min-h-screen bg-[#f0f5f1]">{children}</main>
         <Toaster position="top-right" reverseOrder={false} />
+        <AuthNotice />
         <Footer />
       </body>
     </html>

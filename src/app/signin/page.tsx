@@ -6,6 +6,18 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
+function getRedirectPath() {
+  const redirectPath = new URLSearchParams(window.location.search).get(
+    "redirect",
+  );
+
+  if (redirectPath?.startsWith("/") && !redirectPath.startsWith("//")) {
+    return redirectPath;
+  }
+
+  return "/";
+}
+
 export default function SignInPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -18,37 +30,50 @@ export default function SignInPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const { data, error } = await authClient.signIn.email({
-      email,
-      password,
-      callbackURL: "/",
-    });
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: getRedirectPath(),
+      });
 
-    if (error) {
-      toast.error(error.message || "সাইন ইন করতে সমস্যা হয়েছে!");
+      if (error) {
+        toast.error(error.message || "সাইন ইন করতে সমস্যা হয়েছে!");
+        return;
+      }
+
+      if (data) {
+        toast.success("সফলভাবে সাইন ইন করা হয়েছে! 🎉");
+        router.push(getRedirectPath());
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "সাইন ইন করা যায়নি।",
+      );
+    } finally {
       setLoading(false);
-      return;
-    }
-
-    if (data) {
-      toast.success("সফলভাবে সাইন ইন করা হয়েছে! 🎉");
-      router.push("/");
-      router.refresh();
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    const { data, error } = await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/",
-    });
-  };
+  const handleSocialSignIn = async (provider: "google" | "github") => {
+    const callbackUrl = new URL(getRedirectPath(), window.location.origin);
+    callbackUrl.searchParams.set("auth", "success");
 
-  const handleGithubSignIn = async () => {
-    const { data, error } = await authClient.signIn.social({
-      provider: "github",
-      callbackURL: "/",
-    });
+    try {
+      const { error } = await authClient.signIn.social({
+        provider,
+        callbackURL: `${callbackUrl.pathname}${callbackUrl.search}`,
+      });
+
+      if (error) {
+        toast.error(error.message || "সোশ্যাল সাইন ইন করা যায়নি।");
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "সোশ্যাল সাইন ইন করা যায়নি।",
+      );
+    }
   };
 
   return (
@@ -114,7 +139,7 @@ export default function SignInPage() {
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={handleGoogleSignIn}
+            onClick={() => handleSocialSignIn("google")}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700"
           >
             <span className="text-base">G</span>
@@ -123,7 +148,7 @@ export default function SignInPage() {
 
           <button
             type="button"
-            onClick={handleGithubSignIn}
+            onClick={() => handleSocialSignIn("github")}
             className="flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-700"
           >
             <span className="text-base">🐙</span>

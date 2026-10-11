@@ -10,7 +10,7 @@ const NotFound = () => {
         href="/"
         className="bg-green-600 text-white px-6 py-2.5 rounded-xl hover:bg-green-700 transition-colors"
       >
-        হোমে ফিরে যান
+        হোম পেজে ফিরে যান
       </Link>
     </div>
   );

@@ -23,6 +23,14 @@ export interface Product {
 export default function ProductCard({ product }: { product: Product }) {
   const isUp = product.change?.dir === "up";
   const isDown = product.change?.dir === "down";
+  const unitLabels: Record<string, string> = {
+    kg: "কেজি",
+    liter: "লিটার",
+    litre: "লিটার",
+    dozen: "ডজন",
+    piece: "পিস",
+  };
+  const unitLabel = unitLabels[product.unit] || product.unit;
 
   return (
     <Link href={`/product/${product.slug}`} className="block">
@@ -36,7 +44,7 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.nameBn}
             </h3>
             <p className="text-xs text-gray-500">
-              প্রতি {product.unit === "kg" ? "কেজি" : product.unit}
+              প্রতি {unitLabel}
             </p>
           </div>
         </div>
@@ -44,19 +52,25 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="text-right">
           <p className="text-xs text-gray-500">আজকের দাম</p>
           <p className="text-lg font-bold text-gray-900">
-            {product.today} <span className="text-sm font-normal">টাকা</span>
+            {product.today.toLocaleString("bn-BD")}{" "}
+            <span className="text-sm font-normal">টাকা</span>
           </p>
           <div
             className={`text-xs font-semibold flex items-center justify-end space-x-1 ${
               isUp
-                ? "text-red-600"
+                ? "text-green-600"
                 : isDown
-                  ? "text-green-600"
+                  ? "text-red-600"
                   : "text-gray-500"
             }`}
           >
             <span>{isUp ? "▲" : isDown ? "▼" : "•"}</span>
-            <span>{product.change?.pct}%</span>
+            <span>
+              {Math.abs(product.change?.pct ?? 0).toLocaleString("bn-BD", {
+                maximumFractionDigits: 1,
+              })}
+              %
+            </span>
           </div>
         </div>
       </div>
